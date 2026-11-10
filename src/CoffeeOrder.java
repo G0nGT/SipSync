@@ -7,7 +7,8 @@ public class CoffeeOrder {
     public CoffeeOrder(String customerName, String drinkName) {
         if (customerName == null || customerName.trim().isEmpty()
             || drinkName == null || drinkName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Name and drink are required.");
+            throw new IllegalArgumentException(
+                "Name and drink are required.");
         }
         this.customerName = customerName.trim();
         this.drinkName = drinkName.trim();
