@@ -22,8 +22,7 @@ public class CoffeeShopModel {
         if (!name.matches("[\\p{L} '-]+")
             || !name.matches(".*\\p{L}.*")) {
             throw new IllegalArgumentException(
-                "Use letters, spaces, apostrophes, or hyphens in the name."
-                + " Include at least one letter.");
+                "Invalid name. Please use letters, spaces, apostrophes, and hyphens only.");
         }
         if (drinkChoice < 1 || drinkChoice > drinkMenu.length) {
             throw new IllegalArgumentException("Choose a drink from 1 to 4.");
