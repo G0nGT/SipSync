@@ -168,3 +168,7 @@ File responsibilities follow the division of work in the Specification.
 | ConsoleView.java | Nie | Console input, menus, messages, and order display |
 | ConsoleViewTest.java | Nie | View input and output tests |
 | README.md | Nie | Project instructions, reflection, and next-step coordination |
+
+## GenAI Note
+
+We used GenAI to help coordinate team members' tasks and support integration between their code. It also helped answer individual members' technical questions, including how to understand and resolve coding errors. GenAI generated an initial implementation and tests and helped draft the README.
