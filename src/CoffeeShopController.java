@@ -42,9 +42,11 @@ public class CoffeeShopController
                 continue;
             }
 
+
             switch (choice)
             {
                 case 0:
+                    view.displayMessage("Now exiting SipSync. Goodbye!");
                     return;
 
                 case 1:
