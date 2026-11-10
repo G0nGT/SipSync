@@ -177,20 +177,17 @@ division of work. It does not claim that the assigned work is already
 completed. Before submission, update the last column with what each
 member actually wrote, revised, reviewed, or tested.
 
-| Class or test file | Assigned owner | Assigned work | Actual completed contribution |
+| Class or test file | Assigned owner | Assigned work 
 | --- | --- | --- | --- |
-| CoffeeOrder.java | Parin | Review order validation and immutable fields | Pending member update |
-| OrderNode.java | Parin | Review the order and next links | Pending member update |
-| OrderQueue.java | Parin | Review FIFO links and the last-removal case | Pending member update |
-| CoffeeOrderTest.java | Parin | Run and extend constructor/getter tests | Pending member update |
-| OrderQueueTest.java | Parin | Run FIFO tests and add missing queue cases | Pending member update |
-| CoffeeShopModel.java | Monya | Review name/drink validation and completion | Pending member update |
-| CoffeeShopModelTest.java | Monya | Run and extend model validation tests | Pending member update |
-| CoffeeShopController.java | Mohammed | Review menu handling, retries, EOF, and refresh | Pending member update |
-| SipSyncApp.java | Mohammed | Review startup wiring and lead integration | Pending member update |
-| CoffeeShopControllerTest.java | Mohammed | Run integration tests and add recovery cases | Pending member update |
-| ConsoleView.java | Nie | Review prompts, menus, input, and list display | Pending member update |
-| ConsoleViewTest.java | Nie | Run and extend view tests; check the console demo | Pending member update |
-
-Nie coordinates README updates. Each member updates their own actual
-contribution entries after doing the assigned work.
+| CoffeeOrder.java | Parin | Review order validation and immutable fields |
+| OrderNode.java | Parin | Review the order and next links 
+| OrderQueue.java | Parin | Review FIFO links and the last-removal case |
+| CoffeeOrderTest.java | Parin | Run and extend constructor/getter tests |
+| OrderQueueTest.java | Parin | Run FIFO tests and add missing queue cases | 
+| CoffeeShopModel.java | Monya | Review name/drink validation and completion | 
+| CoffeeShopModelTest.java | Monya | Run and extend model validation tests |
+| CoffeeShopController.java | Mohammed | Review menu handling, retries, EOF, and refresh |
+| SipSyncApp.java | Mohammed | Review startup wiring and lead integration | 
+| CoffeeShopControllerTest.java | Mohammed | Run integration tests and add recovery cases |
+| ConsoleView.java | Nie | Review prompts, menus, input, and list display | 
+| ConsoleViewTest.java | Nie | Run and extend view tests; check the console demo | 
