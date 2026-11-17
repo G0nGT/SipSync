@@ -1,9 +1,11 @@
-import student.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.util.NoSuchElementException;
 
 /** Tests FIFO order, invalid operations, and list protection. */
-public class OrderQueueTest extends TestCase {
+public class OrderQueueTest {
 
+    @Test
     public void testAddsPeeksAndRemovesInFifoOrder() {
         OrderQueue queue = new OrderQueue();
         CoffeeOrder ada = new CoffeeOrder("Ada", "Latte");
@@ -24,6 +26,7 @@ public class OrderQueueTest extends TestCase {
         assertTrue(queue.isEmpty());
     }
 
+    @Test
     public void testCanAddAfterRemovingLastOrder() {
         OrderQueue queue = new OrderQueue();
         CoffeeOrder ada = new CoffeeOrder("Ada", "Latte");
@@ -38,6 +41,7 @@ public class OrderQueueTest extends TestCase {
         assertTrue(queue.getOrders().isEmpty());
     }
 
+    @Test
     public void testRejectsEmptyDequeue() {
         try {
             new OrderQueue().dequeue();
@@ -48,6 +52,7 @@ public class OrderQueueTest extends TestCase {
         }
     }
 
+    @Test
     public void testNullEnqueueKeepsOrders() {
         OrderQueue queue = new OrderQueue();
         CoffeeOrder ada = new CoffeeOrder("Ada", "Latte");
@@ -63,6 +68,7 @@ public class OrderQueueTest extends TestCase {
         }
     }
 
+    @Test
     public void testEmptyPeek() {
         OrderQueue queue = new OrderQueue();
 
@@ -75,6 +81,7 @@ public class OrderQueueTest extends TestCase {
         }
     }
 
+    @Test
     public void testInterleavedQueueAndListCopy() {
         OrderQueue queue = new OrderQueue();
         CoffeeOrder ada = new CoffeeOrder("Ada", "Latte");

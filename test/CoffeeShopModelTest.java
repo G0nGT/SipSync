@@ -1,10 +1,12 @@
-import student.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 /** Tests the model independently of the view. */
-public class CoffeeShopModelTest extends TestCase {
+public class CoffeeShopModelTest {
 
+    @Test
     public void testAddsAndCompletesOrders() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -28,6 +30,7 @@ public class CoffeeShopModelTest extends TestCase {
             .getDrinkName());
     }
 
+    @Test
     public void testHasSpecifiedDrinkMenu() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -36,6 +39,7 @@ public class CoffeeShopModelTest extends TestCase {
         }), Arrays.asList(model.getDrinkMenu()));
     }
 
+    @Test
     public void testRejectsNumericNameWithoutChangingOrders() {
         CoffeeShopModel model = new CoffeeShopModel();
         model.addOrder("Ada", 2);
@@ -51,6 +55,7 @@ public class CoffeeShopModelTest extends TestCase {
         }
     }
 
+    @Test
     public void testRejectsEmptyName() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -63,6 +68,7 @@ public class CoffeeShopModelTest extends TestCase {
         }
     }
 
+    @Test
     public void testRejectsNullName() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -75,6 +81,7 @@ public class CoffeeShopModelTest extends TestCase {
         }
     }
 
+    @Test
     public void testRejectsSpecialCharacters() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -87,6 +94,7 @@ public class CoffeeShopModelTest extends TestCase {
         }
     }
 
+    @Test
     public void testAcceptsValidNames() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -100,6 +108,7 @@ public class CoffeeShopModelTest extends TestCase {
             .getCustomerName());
     }
 
+    @Test
     public void testRejectsInvalidDrinkChoice() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -112,6 +121,7 @@ public class CoffeeShopModelTest extends TestCase {
         }
     }
 
+    @Test
     public void testRejectsNegativeDrinkChoice() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -124,6 +134,7 @@ public class CoffeeShopModelTest extends TestCase {
         }
     }
 
+    @Test
     public void testOrdersCompleteInOrder() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -140,6 +151,7 @@ public class CoffeeShopModelTest extends TestCase {
         assertTrue(model.getPendingOrders().isEmpty());
     }
 
+    @Test
     public void testInterleavedOrders() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -163,6 +175,7 @@ public class CoffeeShopModelTest extends TestCase {
         assertTrue(model.getPendingOrders().isEmpty());
     }
 
+    @Test
     public void testCompleteEmptyQueue() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -175,6 +188,7 @@ public class CoffeeShopModelTest extends TestCase {
         }
     }
 
+    @Test
     public void testMenuCannotBeModified() {
         CoffeeShopModel model = new CoffeeShopModel();
         String[] menu = model.getDrinkMenu();
@@ -184,6 +198,7 @@ public class CoffeeShopModelTest extends TestCase {
         assertEquals("Espresso", model.getDrinkMenu()[0]);
     }
 
+    @Test
     public void testHasPendingOrders() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -198,6 +213,7 @@ public class CoffeeShopModelTest extends TestCase {
         assertFalse(model.hasPendingOrders());
     }
 
+    @Test
     public void testGetOrderCount() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -213,6 +229,7 @@ public class CoffeeShopModelTest extends TestCase {
         assertEquals(1, model.getOrderCount());
     }
 
+    @Test
     public void testSkipNextOrder() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -229,6 +246,7 @@ public class CoffeeShopModelTest extends TestCase {
             .getCustomerName());
     }
 
+    @Test
     public void testSkipSingleOrder() {
         CoffeeShopModel model = new CoffeeShopModel();
         model.addOrder("Ada", 1);
@@ -241,6 +259,7 @@ public class CoffeeShopModelTest extends TestCase {
             .getCustomerName());
     }
 
+    @Test
     public void testSkipEmptyQueue() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -253,6 +272,7 @@ public class CoffeeShopModelTest extends TestCase {
         }
     }
 
+    @Test
     public void testCompleteAfterSkip() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -271,6 +291,7 @@ public class CoffeeShopModelTest extends TestCase {
         assertTrue(model.getPendingOrders().isEmpty());
     }
 
+    @Test
     public void testPendingOrdersListIsIndependent() {
         CoffeeShopModel model = new CoffeeShopModel();
         model.addOrder("Ada", 1);
@@ -284,6 +305,7 @@ public class CoffeeShopModelTest extends TestCase {
             .getCustomerName());
     }
 
+    @Test
     public void testModelNameBoundaries() {
         CoffeeShopModel model = new CoffeeShopModel();
         String name = "";
@@ -311,6 +333,7 @@ public class CoffeeShopModelTest extends TestCase {
             .getCustomerName());
     }
 
+    @Test
     public void testZeroDrinkKeepsOrders() {
         CoffeeShopModel model = new CoffeeShopModel();
         model.addOrder("Ada", 1);

@@ -1,4 +1,5 @@
-import student.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -6,8 +7,9 @@ import java.util.Collections;
 import java.util.Scanner;
 
 /** Tests console input and output. */
-public class ConsoleViewTest extends TestCase {
+public class ConsoleViewTest {
 
+    @Test
     public void testDisplaysEmptyAndPopulatedLists() {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         ConsoleView view = new ConsoleView(new Scanner(""),
@@ -29,6 +31,7 @@ public class ConsoleViewTest extends TestCase {
         assertTrue(text.indexOf("Ada") < text.indexOf("Ben"));
     }
 
+    @Test
     public void testReadsLineAndReturnsNullAtEnd() {
         ConsoleView view = new ConsoleView(new Scanner("Ada\n"),
             new PrintStream(new ByteArrayOutputStream()));
@@ -37,6 +40,7 @@ public class ConsoleViewTest extends TestCase {
         assertNull(view.readLine("Name: "));
     }
 
+    @Test
     public void testMenusAndPrompts() {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         ConsoleView view = new ConsoleView(new Scanner("Ada\n"),
@@ -57,6 +61,7 @@ public class ConsoleViewTest extends TestCase {
         assertTrue(output.contains("Customer name: "));
     }
 
+    @Test
     public void testNullViewArguments() {
         try {
             new ConsoleView(null, new PrintStream(

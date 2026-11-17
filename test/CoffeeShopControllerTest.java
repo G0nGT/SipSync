@@ -1,11 +1,13 @@
-import student.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
 /** Tests console actions through the controller. */
-public class CoffeeShopControllerTest extends TestCase {
+public class CoffeeShopControllerTest {
 
+    @Test
     public void testAddsViewsAndCompletesOldestOrder() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -26,6 +28,7 @@ public class CoffeeShopControllerTest extends TestCase {
             .getCustomerName());
     }
 
+    @Test
     public void testIncompleteOrderAtEndOfInputIsNotAdded() {
         CoffeeShopModel model = new CoffeeShopModel();
         String output = run(model, "1\nAda\n");
@@ -34,6 +37,7 @@ public class CoffeeShopControllerTest extends TestCase {
         assertFalse(output.contains("Order added."));
     }
 
+    @Test
     public void testSkipRefreshAndCompletion() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -50,6 +54,7 @@ public class CoffeeShopControllerTest extends TestCase {
             .getCustomerName());
     }
 
+    @Test
     public void testEmptyActionsAndInvalidMenuRecover() {
         CoffeeShopModel model = new CoffeeShopModel();
 
@@ -62,6 +67,7 @@ public class CoffeeShopControllerTest extends TestCase {
         assertEquals(1, model.getOrderCount());
     }
 
+    @Test
     public void testBadOrdersRecover() {
         String[] inputs = {
             "\n1\n", "123\n1\n", "Ada!\n1\n", "Ada\n0\n",
@@ -80,6 +86,7 @@ public class CoffeeShopControllerTest extends TestCase {
         }
     }
 
+    @Test
     public void testLongNameRecovers() {
         String name = "";
 
@@ -98,6 +105,7 @@ public class CoffeeShopControllerTest extends TestCase {
             .getCustomerName());
     }
 
+    @Test
     public void testEndOfInputAtEveryPrompt() {
         String[] inputs = {"", "1\n", "1\nAda\n", "1\nAda\nabc\n"};
 
@@ -110,6 +118,7 @@ public class CoffeeShopControllerTest extends TestCase {
         }
     }
 
+    @Test
     public void testAddAfterClearingAndSkipSingle() {
         CoffeeShopModel model = new CoffeeShopModel();
 

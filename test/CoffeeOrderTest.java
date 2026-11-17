@@ -1,14 +1,17 @@
-import student.TestCase;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /** Tests order data and validation. */
-public class CoffeeOrderTest extends TestCase {
+public class CoffeeOrderTest {
 
+    @Test
     public void testStoresNameAndDrink() {
         CoffeeOrder order = new CoffeeOrder("Ada", "Latte");
         assertEquals("Ada", order.getCustomerName());
         assertEquals("Latte", order.getDrinkName());
     }
 
+    @Test
     public void testRejectsBlankName() {
         try {
             new CoffeeOrder("  ", "Latte");
@@ -19,6 +22,7 @@ public class CoffeeOrderTest extends TestCase {
         }
     }
 
+    @Test
     public void testOrderValidationAndTrimming() {
         CoffeeOrder order = new CoffeeOrder(" Ada ", " Latte ");
         assertEquals("Ada", order.getCustomerName());
