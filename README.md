@@ -1,174 +1,159 @@
-# SipSync - First Prototype
+# SipSync - Second Prototype + Tests
 
-SipSync is a console app for managing coffee orders. Employees can add an order, view waiting orders, and complete the oldest order first. Each order contains one customer name and one drink.
+SipSync is a console app for managing coffee orders. Employees can add orders, view pending orders, complete the oldest order, and move the oldest order to the back using Skip/Requeue. Each order contains one customer name and one drink.
 
 ## Running the Application
 
-This project uses Eclipse. Source files are in `src`, test files are in `test`, and the course library belongs in `lib`.
+Source files are in `src`, tests are in `test`, and the JUnit 5 library is in `lib`.
 
-1. Place the course-provided `student.jar` in `lib`.
-2. Open Eclipse and select **File > Import > General > Existing Projects into Workspace**.
-3. Select the project folder and finish importing.
-4. Right-click `SipSyncApp.java` and select **Run As > Java Application**.
+### VS Code
 
-The main menu provides these options:
+1. Open the project folder.
+2. Open `src/SipSyncApp.java`.
+3. Click **Run** above `main`.
 
-- `1` - Add Order
-- `2` - View Orders
-- `3` - Complete Next Order
-- `0` - Exit
+To run tests, use **Run Tests** on the `test` folder or use the Testing sidebar.
 
-The drink menu contains Espresso, Latte, Cappuccino, and Americano.
+### Eclipse
 
-Invalid input displays an error and allows another attempt. Ending input exits the application without adding an incomplete order.
+1. Import the folder through **File > Import > General > Existing Projects into Workspace**.
+2. Right-click `SipSyncApp.java` → **Run As > Java Application**.
+3. For tests, right-click `test` → **Run As > JUnit Test**, using JUnit 5.
 
-### Example
+### Command Line
 
-Enter each value on a separate line:
+From the project root in Windows PowerShell:
 
-```text
-1
-Ada
-2
-1
-Ben
-4
-2
-3
-0
+```powershell
+New-Item -ItemType Directory -Force bin | Out-Null
+javac -d bin src/*.java
+java -cp bin SipSyncApp
 ```
 
-This adds Ada's Latte and Ben's Americano. Viewing orders shows Ada first. Completing the next order removes Ada and displays Ben as the only remaining order.
+Compile and run the tests:
 
-## Running the Tests
+```powershell
+javac -cp "lib/junit-platform-console-standalone-1.14.4.jar" -d bin src/*.java test/*.java
+java -jar lib/junit-platform-console-standalone-1.14.4.jar execute --class-path bin --scan-class-path
+```
 
-The test classes extend `student.TestCase`.
+The JUnit jar must be in `lib`, and `.classpath` must reference it. These commands were checked with JDK 21.
 
-In Eclipse, right-click the `test` folder and select **Run As > JUnit Test**. To run one test class, right-click that file instead.
+## Using SipSync
 
-To exercise the model without a view or controller, run:
+| Choice | Action |
+| --- | --- |
+| 1 | Add Order |
+| 2 | View Orders |
+| 3 | Complete Next Order |
+| 4 | Skip/Requeue Next Order |
+| 0 | Exit |
 
-- `CoffeeOrderTest`
-- `OrderQueueTest`
-- `CoffeeShopModelTest`
+Drink choices are Espresso, Latte, Cappuccino, and Americano.
 
-These tests create and use model objects directly. The included suite contains 12 tests and does not cover the entire Specification test plan.
+Names must contain a letter and may include spaces, apostrophes, and hyphens. Names longer than 50 characters are rejected. Invalid input displays a message and allows another attempt. Ending input exits without adding an incomplete order.
 
-## Design
+For example, if Ada is before Ben, choosing Skip/Requeue changes the order to Ben followed by Ada. Completing the next order then removes Ben. Empty completion and skip operations display a message without crashing.
+
+## Design and Tests
 
 | Class | Responsibility |
 | --- | --- |
-| CoffeeOrder | Stores a customer's name and drink. |
-| OrderNode | Stores one order and a link to the next node. |
-| OrderQueue | Implements a custom singly linked FIFO queue. |
-| CoffeeShopModel | Validates order details and manages the queue. |
-| ConsoleView | Reads console input and displays menus, messages, and orders. |
-| CoffeeShopController | Handles choices, calls the model, and refreshes the display. |
-| SipSyncApp | Creates the objects and starts the application. |
+| CoffeeOrder | Stores one customer's name and drink. |
+| OrderNode | Stores an order and the next-node link. |
+| OrderQueue | Implements a singly linked FIFO queue. |
+| CoffeeShopModel | Validates orders and manages adding, completing, and skipping. |
+| ConsoleView | Reads input and displays menus, messages, and order lists. |
+| CoffeeShopController | Connects user choices to the model and refreshes the view. |
+| SipSyncApp | Creates the objects and starts the program. |
 
-New orders enter at the tail, and completed orders leave from the head. Adding and removing an order take O(1). Creating or displaying the full order list takes O(n).
+Adding, completing, and skipping take O(1). Creating or displaying the order list takes O(n).
+
+The suite contains 43 tests. The latest command-line run passed all 43 with no failures.
+
+The tests cover normal operations, invalid names and drink choices, empty queues, null inputs, FIFO order, interleaved queue operations, skip behavior, input recovery, and list/menu protection.
+
+`CoffeeOrderTest`, `OrderQueueTest`, and `CoffeeShopModelTest` exercise the model without a view or controller. Controller and view tests check console flow and output.
 
 ## Reflection
 
-### What changed from the specification?
+### How did the design absorb the change?
 
-The implementation keeps the seven classes and the public method signatures listed in the Specification. It uses the console menu described in the Specification instead of the buttons described in the original Scope.
+We implemented the feature named in our D3 plan: **Skip/Requeue Next Order**.
 
-The Specification did not provide every view method. We added `displayMenu()`, `displayDrinkMenu()`, `readLine()`, and `displayMessage()` to keep input and output inside `ConsoleView`.
+| D3 prediction | Actual result |
+| --- | --- |
+| Add `CoffeeShopModel.skipNextOrder()`. | Uses dequeue followed by enqueue and returns the skipped order. An empty queue throws `NoSuchElementException`. |
+| Add option 4 and `skipOrder()` in the controller. | Calls the model, displays confirmation, refreshes the list, and handles an empty queue. |
+| Update `ConsoleView.displayMenu()`. | Displays the new option. |
+| Add model, controller, view, and queue tests. | Tests reordering, single/empty queues, output, and completion after skip. |
+| Keep CoffeeOrder, OrderNode, OrderQueue, and SipSyncApp unchanged. | No implementation changes were needed for skip. |
+| Keep `ConsoleView.displayOrders()` unchanged. | It already displays the supplied list in order. |
 
-An additional `ConsoleView` constructor accepts a `Scanner` and `PrintStream`. This allows console tests to supply input and capture output without using the keyboard.
+The feature touched CoffeeShopModel, CoffeeShopController, ConsoleView, their tests, and OrderQueueTest. CoffeeOrderTest also received validation tests. All five test classes were converted to JUnit 5.
 
-Names and drink text are trimmed when stored. `getOrders()` returns a separate list, and `getDrinkMenu()` returns an array copy. These choices prevent callers from changing the queue or fixed menu through returned data.
+### Did the change cross the model/view line?
 
-Validation stays in the specified layers. The controller parses console input, the model checks customer names and drink choices, and the queue rejects null orders and empty removal operations.
+The layers stayed separate. The model changes the queue without console input or output. The controller handles the action and passes the updated list to the view.
 
-### Did the model stand alone?
+The view does not keep its own queue or need to understand the linked nodes. The model still runs independently.
 
-Yes. The model can add, list, and complete orders without constructing a view or controller. Model classes do not read console input or print messages.
+### What changed from the D3 plan?
 
-The controller gets the current order list from the model and passes it to the view. After a successful addition or completion, it requests and displays the updated list.
+We kept the planned skip feature and its expected behavior.
 
-### What happened to the unknowns?
+We added more boundary and bad-input tests. The 50-character name limit moved into the model because the earlier controller warning did not prevent an order from being added.
 
-The Scope identified connecting actions to the model, refreshing the list, and testing FIFO as open questions.
+The model also has tested `hasPendingOrders()` and `getOrderCount()` methods. These currently take O(n) because they use an order-list copy.
 
-The controller now connects menu choices to model methods. It refreshes the list after successful changes. The queue tests check FIFO by adding Ada before Ben and checking that Ada is removed first.
-
-Connecting graphical buttons remains open because this prototype uses a console interface.
+The tests now use JUnit 5, following HokieConnect. This avoids the Security Manager startup problem encountered with `student.TestCase`. The test imports, annotations, and build path changed accordingly.
 
 ### What does not work yet?
 
-The single-drink MVP is implemented. Multiple drinks per order, completing individual drinks within an order, a graphical interface, and skip/requeue are not implemented.
+The single-drink console MVP and skip feature are implemented. Multiple drinks per order, individual-drink completion, a GUI, and saving orders between runs are not implemented.
 
-Orders are stored only while the application is running.
+The current tests pass, but final checks still include the editor test runner and any remaining cases from the Scope and Specification.
 
-Some automated tests are still missing:
-
-| Area | Additional tests needed | Owner |
-| --- | --- | --- |
-| CoffeeOrder | Null name, null or blank drink, and trimming | Parin |
-| OrderQueue | Null enqueue without changing existing orders, empty peek, and independence of returned lists | Parin |
-| CoffeeShopModel | Null and blank names, special characters, valid apostrophes and hyphens, invalid drink numbers, empty completion, and menu-copy protection | Monya |
-| CoffeeShopController | Invalid menu and drink input, recovery after errors, empty completion, end of input at each prompt, and adding after clearing the queue | Mohammed |
-| ConsoleView | Main menu, drink menu, prompts, and null constructor arguments | Nie |
+A future improvement could store a count in OrderQueue to make count queries O(1). It is not needed for the current feature.
 
 ## Next Steps
 
-### Remaining MVP Work
+### Remaining Work
 
-The next steps focus on finishing test coverage and checking integration:
-
-1. Parin will add the missing order and queue tests.
-2. Monya will add the remaining model validation and empty-completion tests.
-3. Mohammed will extend controller tests for invalid input, recovery, and end of input.
-4. Nie will extend view tests and check the console demo.
-5. Mohammed will lead a complete integration run. Any failures found during these checks will be fixed before adding the next feature.
-
-### Deliverable 4 Change Feature
-
-We plan to add **Skip/Requeue Next Order**. This action will move the oldest order to the back without completing it.
-
-For example, if the queue contains Ada followed by Ben, skipping the next order will change it to Ben followed by Ada. This changes model state and will be available through the controller and view.
-
-| Class or method | Predicted change | Owner |
+| Order | Task | Owner |
 | --- | --- | --- |
-| CoffeeShopModel.skipNextOrder() | Add a method that removes the oldest order, adds it to the tail, and returns it. An empty queue throws NoSuchElementException. | Monya |
-| CoffeeShopController.start() | Add menu option 4 and connect it to a skipOrder helper. | Mohammed |
-| CoffeeShopController.skipOrder() | Call the model, display a confirmation, refresh the list, and handle an empty queue. | Mohammed |
-| ConsoleView.displayMenu() | Display the new Skip/Requeue option. | Nie |
-| CoffeeShopModelTest | Test two-order reordering, a single order, and an empty queue. | Monya |
-| CoffeeShopControllerTest | Test the new menu action, refreshed output, empty skip, and completion after a skip. | Mohammed |
-| ConsoleViewTest | Check that the new option appears. | Nie |
-| OrderQueueTest | Check the dequeue-then-enqueue behavior used by requeue. | Parin |
+| 1 | Review order and queue tests against the Scope and Specification. | Parin |
+| 2 | Review name validation and skip boundaries; add any missing model tests. | Monya |
+| 3 | Check the program and tests in the grading environment and fix integration issues. | Mohammed |
+| 4 | Check menus, run instructions, and the console demonstration. | Nie |
+| 5 | Run the complete test suite after final changes. | Mohammed |
+| 6 | Verify file attribution and prepare explanations of assigned code. | All members; Nie coordinates |
 
-`CoffeeOrder`, `OrderNode`, `OrderQueue`, and `SipSyncApp` should not need implementation changes. The existing queue operations already support removing from the front and adding at the back. `ConsoleView.displayOrders()` should also remain unchanged because it already displays orders in the supplied sequence.
+We are keeping Skip/Requeue. Multiple drinks per order, individual-drink completion, a GUI, and file persistence are outside the current final-build scope.
 
-### Stretch Goals
+### Demo Plan
 
-We will implement skip/requeue for Deliverable 4.
-
-We are leaving multiple drinks per order and individual-drink completion out of the Deliverable 4 plan because they require larger changes to order data and completion rules. A graphical interface is also outside the next deliverable's planned scope.
+Nie will demonstrate adding Ada and Ben, viewing the queue, skipping Ada, and completing Ben. The demonstration will also show invalid-input recovery, an empty-queue action, passing tests, and the model/controller/view responsibilities.
 
 ## Work Attribution
 
-File responsibilities follow the division of work in the Specification.
-
-| Class or test file | Member | Responsibility |
+| File | Responsible member | Responsibility |
 | --- | --- | --- |
 | CoffeeOrder.java | Parin | Order data and constructor validation |
 | OrderNode.java | Parin | Linked-node structure |
-| OrderQueue.java | Parin | FIFO queue operations and links |
-| CoffeeOrderTest.java | Parin | Constructor and getter tests |
-| OrderQueueTest.java | Parin | FIFO and queue-state tests |
-| CoffeeShopModel.java | Monya | Order validation and model operations |
-| CoffeeShopModelTest.java | Monya | Model validation and completion tests |
-| CoffeeShopController.java | Mohammed | Menu handling, error recovery, and display refresh |
-| SipSyncApp.java | Mohammed | Application startup and integration |
-| CoffeeShopControllerTest.java | Mohammed | Console flow and integration tests |
+| OrderQueue.java | Parin | FIFO operations and links |
+| CoffeeOrderTest.java | Parin | Order validation and getter tests |
+| OrderQueueTest.java | Parin | FIFO, invalid operations, requeue, and list-protection tests |
+| CoffeeShopModel.java | Monya | Validation and model operations, including skip |
+| CoffeeShopModelTest.java | Monya | Model validation, completion, and skip tests |
+| CoffeeShopController.java | Mohammed | Menu actions, recovery, skip handling, and display refresh |
+| SipSyncApp.java | Mohammed | Application startup |
+| CoffeeShopControllerTest.java | Mohammed | Console flow, recovery, and integration tests |
 | ConsoleView.java | Nie | Console input, menus, messages, and order display |
 | ConsoleViewTest.java | Nie | View input and output tests |
-| README.md | Nie | Project instructions, reflection, and next-step coordination |
-
+| README.md | Nie | Instructions, reflection, and coordination |
 ## GenAI Note
 
-We used GenAI to help coordinate team members' tasks and support integration between their code. It also helped answer individual members' technical questions, including how to understand and resolve coding errors. GenAI generated an initial implementation and tests and helped draft the README.
+We used GenAI to help troubleshoot problems running our JUnit tests. We did not understand the lower-level details of Java's Security Manager, classpaths, or how the test library interacted with our Java version. GenAI helped us interpret the error messages and identify that the tests were failing during the initialization of `student.TestCase`, before the test methods could run.
+
+Several suggested configuration changes did not resolve the problem. We then used our earlier HokieConnect project as a reference. GenAI helped convert the tests to JUnit 5 and update the library references in `.classpath`. After these changes, all 43 tests passed in a command-line run.
