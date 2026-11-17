@@ -1,168 +1,116 @@
 import java.util.NoSuchElementException;
-import java.util.*;
 
-/** 
- * Connects console actions to the independent model. 
-*/
-public class CoffeeShopController
-{
+/** Connects console actions to the independent model. */
+public class CoffeeShopController {
     private final CoffeeShopModel model;
     private final ConsoleView view;
 
-    /** 
-     * Stores the two collaborators.
-     * 
-     * @param model the independent model
-     * @param view the console view
-    */
-    public CoffeeShopController(CoffeeShopModel model, ConsoleView view)
-    {
-        if (model == null || view == null)
-            {
-                throw new IllegalArgumentException("Model and view are required.");
-            }
-            
-            this.model = model;
-            this.view = view;
+    /** Stores the model and view. */
+    public CoffeeShopController(CoffeeShopModel model, ConsoleView view) {
+        if (model == null || view == null) {
+            throw new IllegalArgumentException("Model and view are required.");
+        }
+        this.model = model;
+        this.view = view;
     }
 
-    /** 
-     * Runs until Exit is selected or input ends. 
-    */
-    public void start()
-    {
-        while (true)
-        {
-                view.displayMenu();
-                String line = view.readLine("\nChoice: ");
-                
-                if (line == null)
-                    {
-                        return;
-                    }
+    /** Runs until Exit is selected or input ends. */
+    public void start() {
+        while (true) {
+            view.displayMenu();
+            String line = view.readLine("\nChoice: ");
+            if (line == null) {
+                return;
+            }
             int choice;
-            
-            try 
-            {
+            try {
                 choice = Integer.parseInt(line.trim());
             }
-            catch (NumberFormatException exception)
-            {
-                view.displayMessage("Choose 0, 1, 2, or 3.");
+            catch (NumberFormatException exception) {
+                view.displayMessage("Choose 0, 1, 2, 3, or 4.");
                 continue;
             }
-
-
-            switch (choice)
-            {
+            switch (choice) {
                 case 0:
                     view.displayMessage("Now exiting SipSync. Goodbye!");
                     return;
-
                 case 1:
-                    if (!addOrder())
-                        {
-                            return;
-                        }
-                        break;
-                        
+                    if (!addOrder()) {
+                        return;
+                    }
+                    break;
                 case 2:
                     view.displayOrders(model.getPendingOrders());
                     break;
-                        
                 case 3:
                     completeOrder();
                     break;
-
+                case 4:
+                    skipOrder();
+                    break;
                 default:
-                    view.displayMessage("Choose 0, 1, 2, or 3.");
+                    view.displayMessage("Choose 0, 1, 2, 3, or 4.");
                     break;
             }
         }
     }
 
-    /** 
-     * A failed entry starts again with the name, as specified
-     */
+    /** A failed entry starts again with the name. */
     private boolean addOrder() {
-        while (true)
-            {
-                String name = view.readLine("Customer name: ");
-
-                if (name == null)
-                    {
-                        return false;
-                    }
-                    if (name.trim().length() > 50)
-                    {
-                            view.displayMessage("Name must be 50 characters or fewer.");
-                    }
-                    
-                    view.displayDrinkMenu(model.getDrinkMenu());
-                    
-                    String drink = view.readLine("Drink choice: ");
-                    
-                    if (drink == null)
-                        {
-                            return false;
-                        }
-                        
-                    int choice;
-                    
-                    try 
-                    {
-                        choice = Integer.parseInt(drink.trim());
-                    }
-                    catch (NumberFormatException exception)
-                    {
-                        if (drink.contains("."))
-                        {
-                            view.displayMessage("Decimals are not allowed. Enter a whole number pleaase.");
-                        }
-                        else
-                        {
-                            view.displayMessage("Invalid input. Enter a whole number.");
-                        }
-
-                            continue;
-                    }
-                    
-                    try
-                    {
-                        model.addOrder(name, choice);
-                    }
-                    catch (IllegalArgumentException exception)
-                    {
-                        view.displayMessage(exception.getMessage());
-                        continue;
-                    }
-
-                    
-                    
-                    view.displayMessage("Order added successfuly!");
-                    view.displayOrders(model.getPendingOrders());
-                    return true;
-                }
+        while (true) {
+            String name = view.readLine("Customer name: ");
+            if (name == null) {
+                return false;
             }
-            
-            /** 
-             * Completes the oldest orders
-            */
-            private void completeOrder()
-            {
-                try
-                {
-                    CoffeeOrder order = model.completeNextOrder();
-                    view.displayMessage("Completed: " + order.getCustomerName()
-                    + " - " + order.getDrinkName());
-                    
-                    view.displayOrders(model.getPendingOrders());
-                }
-                catch (NoSuchElementException exception)
-                {
-                    view.displayMessage("No pending orders to complete.");
-                }
+            view.displayDrinkMenu(model.getDrinkMenu());
+            String drink = view.readLine("Drink choice: ");
+            if (drink == null) {
+                return false;
             }
+            int choice;
+            try {
+                choice = Integer.parseInt(drink.trim());
+            }
+            catch (NumberFormatException exception) {
+                view.displayMessage("Invalid input. Enter a whole number.");
+                continue;
+            }
+            try {
+                model.addOrder(name, choice);
+            }
+            catch (IllegalArgumentException exception) {
+                view.displayMessage(exception.getMessage());
+                continue;
+            }
+            view.displayMessage("Order added successfully!");
+            view.displayOrders(model.getPendingOrders());
+            return true;
         }
-        
-    
+    }
+
+    /** Completes the oldest order. */
+    private void completeOrder() {
+        try {
+            CoffeeOrder order = model.completeNextOrder();
+            view.displayMessage("Completed: " + order.getCustomerName()
+                + " - " + order.getDrinkName());
+            view.displayOrders(model.getPendingOrders());
+        }
+        catch (NoSuchElementException exception) {
+            view.displayMessage("No pending orders to complete.");
+        }
+    }
+
+    /** Moves the oldest order to the back without completing it. */
+    private void skipOrder() {
+        try {
+            CoffeeOrder order = model.skipNextOrder();
+            view.displayMessage("Skipped: " + order.getCustomerName()
+                + " - " + order.getDrinkName());
+            view.displayOrders(model.getPendingOrders());
+        }
+        catch (NoSuchElementException exception) {
+            view.displayMessage("No pending orders to skip.");
+        }
+    }
+}
