@@ -24,6 +24,10 @@ public class CoffeeShopModel {
         }
 
         String name = customerName.trim();
+        if (name.length() > 50) {
+            throw new IllegalArgumentException(
+                "Name must be 50 characters or fewer.");
+        }
 
         if (!name.matches("[\\p{L} '-]+")
             || !name.matches(".*\\p{L}.*")) {
@@ -77,3 +81,4 @@ public class CoffeeShopModel {
         return queue.getOrders().size();
     }
 }
+
