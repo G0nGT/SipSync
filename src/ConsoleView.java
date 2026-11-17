@@ -2,7 +2,7 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
 
-/** Reads complete lines and displays text; stores no order state. */
+/** Reads and displays text; stores no order state. */
 public class ConsoleView {
     private final Scanner input;
     private final PrintStream output;
@@ -60,6 +60,7 @@ public class ConsoleView {
             output.println("No pending orders.");
             return;
         }
+
         output.println("Pending orders:");
         for (int i = 0; i < orders.size(); i++) {
             CoffeeOrder order = orders.get(i);
@@ -68,4 +69,3 @@ public class ConsoleView {
         }
     }
 }
-

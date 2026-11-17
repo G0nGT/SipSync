@@ -22,6 +22,7 @@ public class CoffeeShopController {
             if (line == null) {
                 return;
             }
+
             int choice;
             try {
                 choice = Integer.parseInt(line.trim());
@@ -30,6 +31,7 @@ public class CoffeeShopController {
                 view.displayMessage("Choose 0, 1, 2, 3, or 4.");
                 continue;
             }
+
             switch (choice) {
                 case 0:
                     view.displayMessage("Now exiting SipSync. Goodbye!");
@@ -62,11 +64,13 @@ public class CoffeeShopController {
             if (name == null) {
                 return false;
             }
+
             view.displayDrinkMenu(model.getDrinkMenu());
             String drink = view.readLine("Drink choice: ");
             if (drink == null) {
                 return false;
             }
+
             int choice;
             try {
                 choice = Integer.parseInt(drink.trim());
@@ -75,6 +79,7 @@ public class CoffeeShopController {
                 view.displayMessage("Invalid input. Enter a whole number.");
                 continue;
             }
+
             try {
                 model.addOrder(name, choice);
             }
@@ -82,6 +87,7 @@ public class CoffeeShopController {
                 view.displayMessage(exception.getMessage());
                 continue;
             }
+
             view.displayMessage("Order added successfully!");
             view.displayOrders(model.getPendingOrders());
             return true;

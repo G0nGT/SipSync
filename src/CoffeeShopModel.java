@@ -1,10 +1,7 @@
 import java.util.List;
 
-/**
- * Validates and manages coffee orders without console dependencies.
- */
+/** Validates and manages orders without console dependencies. */
 public class CoffeeShopModel {
-
     private final OrderQueue queue;
     private final String[] drinkMenu;
 
@@ -51,8 +48,7 @@ public class CoffeeShopModel {
     }
 
     /**
-     * Moves the oldest order to the back of the queue.
-     * Returns the skipped order.
+     * Moves the oldest order to the back and returns it.
      * Throws NoSuchElementException if the queue is empty.
      */
     public CoffeeOrder skipNextOrder() {
@@ -81,4 +77,3 @@ public class CoffeeShopModel {
         return queue.getOrders().size();
     }
 }
-

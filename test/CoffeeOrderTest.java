@@ -1,7 +1,8 @@
 import student.TestCase;
 
-/** Initial tests for order data. */
+/** Tests order data and validation. */
 public class CoffeeOrderTest extends TestCase {
+
     public void testStoresNameAndDrink() {
         CoffeeOrder order = new CoffeeOrder("Ada", "Latte");
         assertEquals("Ada", order.getCustomerName());
@@ -18,15 +19,16 @@ public class CoffeeOrderTest extends TestCase {
         }
     }
 
-    // Remaining constructor cases are listed in README.md.
     public void testOrderValidationAndTrimming() {
         CoffeeOrder order = new CoffeeOrder(" Ada ", " Latte ");
         assertEquals("Ada", order.getCustomerName());
         assertEquals("Latte", order.getDrinkName());
+
         String[][] cases = {
             {null, "Latte"}, {"Ada", null}, {"Ada", ""},
             {"Ada", "  "}, {"", "Latte"}
         };
+
         for (String[] details : cases) {
             try {
                 new CoffeeOrder(details[0], details[1]);
@@ -37,6 +39,4 @@ public class CoffeeOrderTest extends TestCase {
             }
         }
     }
-
 }
-

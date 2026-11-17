@@ -18,6 +18,7 @@ public class OrderQueue {
         if (order == null) {
             throw new IllegalArgumentException("Order is required.");
         }
+
         OrderNode node = new OrderNode(order);
         if (isEmpty()) {
             head = node;
