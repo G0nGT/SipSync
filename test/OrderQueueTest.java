@@ -41,4 +41,49 @@ public class OrderQueueTest extends TestCase {
             assertNotNull(exception.getMessage());
         }
     }
+    public void testNullEnqueueKeepsOrders() {
+        OrderQueue queue = new OrderQueue();
+        CoffeeOrder ada = new CoffeeOrder("Ada", "Latte");
+        queue.enqueue(ada);
+        try {
+            queue.enqueue(null);
+            fail("Expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException exception) {
+            assertEquals(1, queue.getOrders().size());
+            assertSame(ada, queue.peek());
+        }
+    }
+
+    public void testEmptyPeek() {
+        OrderQueue queue = new OrderQueue();
+        try {
+            queue.peek();
+            fail("Expected NoSuchElementException");
+        }
+        catch (NoSuchElementException exception) {
+            assertTrue(queue.isEmpty());
+        }
+    }
+
+    public void testInterleavedQueueAndListCopy() {
+        OrderQueue queue = new OrderQueue();
+        CoffeeOrder ada = new CoffeeOrder("Ada", "Latte");
+        CoffeeOrder ben = new CoffeeOrder("Ben", "Espresso");
+        CoffeeOrder cara = new CoffeeOrder("Cara", "Americano");
+        queue.enqueue(ada);
+        queue.enqueue(ben);
+        assertSame(ada, queue.dequeue());
+        queue.enqueue(cara);
+        queue.enqueue(ada);
+        queue.getOrders().clear();
+        assertSame(ben, queue.dequeue());
+        assertSame(cara, queue.dequeue());
+        assertSame(ada, queue.dequeue());
+        assertTrue(queue.isEmpty());
+    }
+
 }
+
+
+

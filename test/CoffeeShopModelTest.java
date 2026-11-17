@@ -331,4 +331,41 @@ public class CoffeeShopModelTest extends TestCase {
         assertEquals("Ada", model.getPendingOrders().get(0)
             .getCustomerName());
     }
+    public void testModelNameBoundaries() {
+        CoffeeShopModel model = new CoffeeShopModel();
+        String name = "";
+        for (int i = 0; i < 50; i++) {
+            name += "A";
+        }
+        model.addOrder(name, 1);
+        String[] invalidNames = {name + "A", "   ", "---", "'''"};
+        for (String invalid : invalidNames) {
+            try {
+                model.addOrder(invalid, 1);
+                fail("Expected IllegalArgumentException");
+            }
+            catch (IllegalArgumentException exception) {
+                assertEquals(1, model.getOrderCount());
+            }
+        }
+        model.addOrder(" Ada ", 4);
+        assertEquals("Ada", model.getPendingOrders().get(1)
+            .getCustomerName());
+    }
+
+    public void testZeroDrinkKeepsOrders() {
+        CoffeeShopModel model = new CoffeeShopModel();
+        model.addOrder("Ada", 1);
+        try {
+            model.addOrder("Ben", 0);
+            fail("Expected IllegalArgumentException");
+        }
+        catch (IllegalArgumentException exception) {
+            assertEquals(1, model.getOrderCount());
+            assertEquals("Ada", model.completeNextOrder().getCustomerName());
+        }
+    }
+
 }
+
+
