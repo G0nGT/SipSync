@@ -1,12 +1,20 @@
 import java.util.NoSuchElementException;
+import java.util.*;
 
-/** Connects console actions to the independent model. */
+/** 
+ * Connects console actions to the independent model. 
+*/
 public class CoffeeShopController
 {
     private final CoffeeShopModel model;
     private final ConsoleView view;
 
-    /** Stores the two collaborators. */
+    /** 
+     * Stores the two collaborators.
+     * 
+     * @param model the independent model
+     * @param view the console view
+    */
     public CoffeeShopController(CoffeeShopModel model, ConsoleView view)
     {
         if (model == null || view == null)
@@ -18,7 +26,9 @@ public class CoffeeShopController
             this.view = view;
     }
 
-    /** Runs until Exit is selected or input ends. */
+    /** 
+     * Runs until Exit is selected or input ends. 
+    */
     public void start()
     {
         while (true)
@@ -71,7 +81,9 @@ public class CoffeeShopController
         }
     }
 
-    // A failed entry starts again with the name, as specified
+    /** 
+     * A failed entry starts again with the name, as specified
+     */
     private boolean addOrder() {
         while (true)
             {
@@ -80,6 +92,10 @@ public class CoffeeShopController
                 if (name == null)
                     {
                         return false;
+                    }
+                    if (name.trim().length() > 50)
+                    {
+                            view.displayMessage("Name must be 50 characters or fewer.");
                     }
                     
                     view.displayDrinkMenu(model.getDrinkMenu());
@@ -99,8 +115,16 @@ public class CoffeeShopController
                     }
                     catch (NumberFormatException exception)
                     {
-                        view.displayMessage("Enter a whole-number drink choice.");
-                        continue;
+                        if (drink.contains("."))
+                        {
+                            view.displayMessage("Decimals are not allowed. Enter a whole number pleaase.");
+                        }
+                        else
+                        {
+                            view.displayMessage("Invalid input. Enter a whole number.");
+                        }
+
+                            continue;
                     }
                     
                     try
@@ -112,6 +136,8 @@ public class CoffeeShopController
                         view.displayMessage(exception.getMessage());
                         continue;
                     }
+
+                    
                     
                     view.displayMessage("Order added successfuly!");
                     view.displayOrders(model.getPendingOrders());
@@ -119,6 +145,9 @@ public class CoffeeShopController
                 }
             }
             
+            /** 
+             * Completes the oldest orders
+            */
             private void completeOrder()
             {
                 try
