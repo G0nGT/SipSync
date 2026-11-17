@@ -28,6 +28,7 @@ public class ConsoleView {
         output.println("1 Add Order");
         output.println("2 View Orders");
         output.println("3 Complete Next Order");
+        output.println("4 Skip/Requeue Next Order");
         output.println("0 Exit");
     }
 
@@ -67,3 +68,4 @@ public class ConsoleView {
         }
     }
 }
+
